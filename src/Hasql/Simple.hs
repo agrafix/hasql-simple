@@ -50,9 +50,6 @@ class DbEncode t where
     packVal :: t -> DbRepr t
     dbEnc :: E.Value t
 
-    default packVal :: t -> t
-    packVal = id
-
     default dbEnc :: DbEncode (DbRepr t) => E.Value t
     dbEnc = contramap packVal dbEnc
 
@@ -78,6 +75,7 @@ class DbDecode t where
 type instance DbRepr Bool = Bool
 instance DbEncode Bool where
     dbEnc = E.bool
+    packVal = id
 
 instance DbDecode Bool where
     dbDec = D.bool
@@ -85,6 +83,7 @@ instance DbDecode Bool where
 type instance DbRepr T.Text = T.Text
 instance DbEncode T.Text where
     dbEnc = E.text
+    packVal = id
 
 instance DbDecode T.Text where
     dbDec = D.text
@@ -92,6 +91,7 @@ instance DbDecode T.Text where
 type instance DbRepr Int64 = Int64
 instance DbEncode Int64 where
     dbEnc = E.int8
+    packVal = id
 
 instance DbDecode Int64 where
     dbDec = D.int8
@@ -99,6 +99,7 @@ instance DbDecode Int64 where
 type instance DbRepr Double = Double
 instance DbEncode Double where
     dbEnc = E.float8
+    packVal = id
 
 instance DbDecode Double where
     dbDec = D.float8
@@ -106,6 +107,7 @@ instance DbDecode Double where
 type instance DbRepr BS.ByteString = BS.ByteString
 instance DbEncode BS.ByteString where
     dbEnc = E.bytea
+    packVal = id
 
 instance DbDecode BS.ByteString where
     dbDec = D.bytea
@@ -113,6 +115,7 @@ instance DbDecode BS.ByteString where
 type instance DbRepr UTCTime = UTCTime
 instance DbEncode UTCTime where
     dbEnc = E.timestamptz
+    packVal = id
 
 instance DbDecode UTCTime where
     dbDec = D.timestamptz
@@ -120,6 +123,7 @@ instance DbDecode UTCTime where
 type instance DbRepr Day = Day
 instance DbEncode Day where
     dbEnc = E.date
+    packVal = id
 
 instance DbDecode Day where
     dbDec = D.date
@@ -127,6 +131,7 @@ instance DbDecode Day where
 type instance DbRepr (V.Vector a) = V.Vector a -- this is a bit cheated here ...
 instance DbEncode a => DbEncode (V.Vector a) where
     dbEnc = E.array (E.arrayDimension V.foldl' (E.arrayValue dbEnc))
+    packVal = id
 
 instance DbDecode a => DbDecode (V.Vector a) where
     dbDec = D.array (D.arrayDimension V.replicateM (D.arrayValue dbDec))
@@ -134,6 +139,7 @@ instance DbDecode a => DbDecode (V.Vector a) where
 type instance DbRepr (HM.HashMap T.Text a) = HM.HashMap T.Text a -- this is a bit cheated here ...
 instance ToJSON a => DbEncode (HM.HashMap T.Text a) where
     dbEnc = jsonbE
+    packVal = id
 
 instance FromJSON a => DbDecode (HM.HashMap T.Text a) where
     dbDec = jsonbD
