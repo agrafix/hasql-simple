@@ -27,7 +27,7 @@ createUserQ =
           <> req nu_email
           <> req nu_password
       decoder =
-          D.singleRow $ D.value dbDec
+          D.singleRow dbDecVal
 ```
 
 The `-simple` in the name is due to this type class approach beeing similar to the one found in `postgresql-simple`. All contributions (e.g. more instances and/or helper functions) are welcome, please send a PR.
