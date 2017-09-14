@@ -1,9 +1,9 @@
 version: 2
 jobs:
   build:
-    working_directory: ~/superrecord
+    working_directory: ~/hasql-simple
     docker:
-      - image: fpco/stack-build:lts-8.20
+      - image: fpco/stack-build:lts-9.4
     steps:
       - checkout
       - restore_cache:
@@ -18,7 +18,7 @@ jobs:
           key: stack-cache
           paths:
             - ~/.stack
-            - ~/superrecord/.stack-work
+            - ~/hasql-simple/.stack-work
       - run:
           name: stack build
           command: 'stack build --fast --pedantic'
@@ -28,41 +28,10 @@ jobs:
       - run:
           name: build benchmarks
           command: 'stack build --fast --bench --no-run-benchmarks'
-  build-ghcjs:
-    working_directory: ~/superrecord
-    docker:
-      - image: fpco/stack-build:lts-8.20
-        environment:
-          STACK_YAML: stack-frontend.yaml
-    steps:
-      - checkout
-      - run:
-          name: setup node etc
-          command: 'apt-get update; apt-get install nodejs npm; npm install -g n; n 6.1.0'
-      - restore_cache:
-          key: stack-cache-ghcjs
-      - run:
-          name: stack setup
-          command: 'stack setup'
-      - run:
-          name: stack install dependencies
-          command: 'stack build --test --only-dependencies'
-      - save_cache:
-          key: stack-cache-ghcjs
-          paths:
-            - ~/.stack
-            - ~/.ghcjs
-            - ~/superrecord/.stack-work
-      - run:
-          name: stack build
-          command: 'stack build --fast --pedantic'
-      - run:
-          name: stack test
-          command: 'stack test --fast'
   build-ghc82:
-    working_directory: ~/superrecord2
+    working_directory: ~/hasql-simple2
     docker:
-      - image: fpco/stack-build:lts-8.20
+      - image: fpco/stack-build:lts-9.4
     steps:
       - checkout
       - restore_cache:
@@ -80,7 +49,7 @@ jobs:
           key: stack-cache-ghc82
           paths:
             - ~/.stack
-            - ~/superrecord2/.stack-work
+            - ~/hasql-simple2/.stack-work
       - run:
           name: stack build
           command: 'stack --resolver nightly build --fast --pedantic'
@@ -94,4 +63,3 @@ workflows:
     jobs:
       - build
       - build-ghc82
-      - build-ghcjs

@@ -1,5 +1,7 @@
 # hasql-simple
 
+[![CircleCI](https://circleci.com/gh/agrafix/hasql-simple.svg?style=svg)](https://circleci.com/gh/agrafix/hasql-simple)
+
 A somewhat opinionated "simpler" API to hasql. This allows to write code like:
 
 ```haskell
