@@ -56,6 +56,15 @@ class DbEncode t where
     default dbEnc :: DbEncode (DbRepr t) => E.Value t
     dbEnc = contramap packVal dbEnc
 
+-- | Short for @D.value dbDec@
+dbDecVal :: DbDecode t => D.Row t
+dbDecVal = D.value dbDec
+
+-- | Short for @D.nullableValue dbDec@
+dbDecOptVal :: DbDecode t => D.Row (Maybe t)
+dbDecOptVal = D.nullableValue dbDec
+
+
 class DbDecode t where
     unpackVal :: DbRepr t -> t
     dbDec :: D.Value t
