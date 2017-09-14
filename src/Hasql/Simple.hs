@@ -108,6 +108,13 @@ instance DbEncode UTCTime where
 instance DbDecode UTCTime where
     dbDec = D.timestamptz
 
+type instance DbRepr Day = Day
+instance DbEncode Day where
+    dbEnc = E.date
+
+instance DbDecode Day where
+    dbDec = D.date
+
 type instance DbRepr (V.Vector a) = V.Vector a -- this is a bit cheated here ...
 instance DbEncode a => DbEncode (V.Vector a) where
     dbEnc = E.array (E.arrayDimension V.foldl' (E.arrayValue dbEnc))
